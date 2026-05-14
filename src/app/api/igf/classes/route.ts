@@ -1,0 +1,44 @@
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+export async function GET() {
+  const { data, error } = await supabaseAdmin
+    .from("igf_classes_media")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  return Response.json({ data, error });
+}
+
+export async function POST(req: Request) {
+  const body = await req.json();
+  const { data, error } = await supabaseAdmin
+    .from("igf_classes_media")
+    .insert([body]);
+
+  return Response.json({ data, error });
+}
+
+export async function PATCH(req: Request) {
+  const { id, is_pinned } = await req.json();
+  const { data, error } = await supabaseAdmin
+    .from("igf_classes_media")
+    .update({ is_pinned })
+    .eq("id", id);
+    
+  return Response.json({ data, error });
+}
+
+export async function DELETE(req: Request) {
+  const { id } = await req.json();
+  const { error } = await supabaseAdmin
+    .from("igf_classes_media")
+    .delete()
+    .eq("id", id);
+
+  return Response.json({ error });
+}

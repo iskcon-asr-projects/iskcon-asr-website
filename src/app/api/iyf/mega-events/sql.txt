@@ -1,0 +1,18 @@
+-- MEGA EVENTS TABLE (UPDATED FOR CATEGORIES)
+DROP TABLE IF EXISTS public.iyf_mega_events;
+
+CREATE TABLE public.iyf_mega_events (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  event_name TEXT NOT NULL,
+  date TEXT,
+  type TEXT NOT NULL DEFAULT 'instagram_link',
+  content TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- ENABLE RLS
+ALTER TABLE public.iyf_mega_events ENABLE ROW LEVEL SECURITY;
+
+-- POLICIES
+CREATE POLICY "Public Read Mega Events" ON public.iyf_mega_events FOR SELECT USING (true);
+CREATE POLICY "Admin All Mega Events" ON public.iyf_mega_events FOR ALL USING (true) WITH CHECK (true);

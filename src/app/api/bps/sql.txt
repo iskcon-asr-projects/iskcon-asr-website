@@ -1,0 +1,16 @@
+CREATE TABLE iyf_bps (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  section TEXT NOT NULL, -- 'class', 'activity', 'shloka'
+  title TEXT,            -- Activity name or Shloka reference
+  media_url TEXT NOT NULL,
+  media_type TEXT DEFAULT 'image', -- 'image', 'video'
+  is_pinned BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable RLS (Assuming public read for now, authenticated write)
+ALTER TABLE iyf_bps ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public Read" ON iyf_bps FOR SELECT USING (true);
+CREATE POLICY "Admin Insert" ON iyf_bps FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admin Update" ON iyf_bps FOR UPDATE USING (true);
+CREATE POLICY "Admin Delete" ON iyf_bps FOR DELETE USING (true);
